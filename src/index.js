@@ -15,7 +15,7 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -27,7 +27,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: "http://localhost:5000",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -51,6 +51,10 @@ app.use(passport.session());
 app.use("/auth", authRoutes);
 app.use("/api/short", urlRoutes);
 app.use("/api/analytics", analyticsRoutes);
+
+app.get("/", (req, res) => {
+  res.send(`server connected to ${PORT}`);
+});
 
 // Error Handling Middleware
 app.use(errorHandler);
