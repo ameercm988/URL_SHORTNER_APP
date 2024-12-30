@@ -19,13 +19,13 @@ export const getURLAnalytics = async (req, res) => {
     const clicksByDate = url.clicksByDate.slice(-7);
 
     // OS Type and Device Type stats calculation
-    const osTypeStats = url.osType.map(os => ({
+    const osTypeStats = url.osType.map((os) => ({
       osName: os.osName,
       uniqueClicks: os.uniqueClicks,
       uniqueUsers: os.uniqueUsers,
     }));
 
-    const deviceTypeStats = url.deviceType.map(device => ({
+    const deviceTypeStats = url.deviceType.map((device) => ({
       deviceName: device.deviceName,
       uniqueClicks: device.uniqueClicks,
       uniqueUsers: device.uniqueUsers,
@@ -59,7 +59,7 @@ export const getTopicAnalytics = async (req, res) => {
     let clicksByDate = [];
     const urlStats = [];
 
-    urls.forEach(url => {
+    urls.forEach((url) => {
       totalClicks += url.totalClicks;
       uniqueClicks += url.uniqueClicks;
 
@@ -70,8 +70,10 @@ export const getTopicAnalytics = async (req, res) => {
       });
 
       // Aggregate clicks by date for all URLs in the topic
-      url.clicksByDate.forEach(entry => {
-        const existingEntry = clicksByDate.find(dateEntry => dateEntry.date === entry.date);
+      url.clicksByDate.forEach((entry) => {
+        const existingEntry = clicksByDate.find(
+          (dateEntry) => dateEntry.date === entry.date
+        );
         if (existingEntry) {
           existingEntry.clicks += entry.clicks;
         } else {
@@ -111,13 +113,15 @@ export const getOverallAnalytics = async (req, res) => {
     let osTypeStats = [];
     let deviceTypeStats = [];
 
-    urls.forEach(url => {
+    urls.forEach((url) => {
       totalClicks += url.totalClicks;
       uniqueClicks += url.uniqueClicks;
 
       // Aggregate clicks by date for all URLs created by the user
-      url.clicksByDate.forEach(entry => {
-        const existingEntry = clicksByDate.find(dateEntry => dateEntry.date === entry.date);
+      url.clicksByDate.forEach((entry) => {
+        const existingEntry = clicksByDate.find(
+          (dateEntry) => dateEntry.date === entry.date
+        );
         if (existingEntry) {
           existingEntry.clicks += entry.clicks;
         } else {
@@ -126,23 +130,33 @@ export const getOverallAnalytics = async (req, res) => {
       });
 
       // OS type and device type stats calculation
-      url.osType.forEach(os => {
-        const osStat = osTypeStats.find(item => item.osName === os.osName);
+      url.osType.forEach((os) => {
+        const osStat = osTypeStats.find((item) => item.osName === os.osName);
         if (osStat) {
           osStat.uniqueClicks += os.uniqueClicks;
           osStat.uniqueUsers += os.uniqueUsers;
         } else {
-          osTypeStats.push({ osName: os.osName, uniqueClicks: os.uniqueClicks, uniqueUsers: os.uniqueUsers });
+          osTypeStats.push({
+            osName: os.osName,
+            uniqueClicks: os.uniqueClicks,
+            uniqueUsers: os.uniqueUsers,
+          });
         }
       });
 
-      url.deviceType.forEach(device => {
-        const deviceStat = deviceTypeStats.find(item => item.deviceName === device.deviceName);
+      url.deviceType.forEach((device) => {
+        const deviceStat = deviceTypeStats.find(
+          (item) => item.deviceName === device.deviceName
+        );
         if (deviceStat) {
           deviceStat.uniqueClicks += device.uniqueClicks;
           deviceStat.uniqueUsers += device.uniqueUsers;
         } else {
-          deviceTypeStats.push({ deviceName: device.deviceName, uniqueClicks: device.uniqueClicks, uniqueUsers: device.uniqueUsers });
+          deviceTypeStats.push({
+            deviceName: device.deviceName,
+            uniqueClicks: device.uniqueClicks,
+            uniqueUsers: device.uniqueUsers,
+          });
         }
       });
     });
@@ -162,5 +176,3 @@ export const getOverallAnalytics = async (req, res) => {
     res.status(500).json({ error: "Error retrieving overall analytics" });
   }
 };
-
-
