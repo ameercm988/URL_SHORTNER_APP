@@ -1,4 +1,4 @@
-import URL from "../models/URL.js";
+import URL from "../models/url.js";
 import redisClient from "../config/redis.js";
 
 export const getURLAnalytics = async (req, res) => {

@@ -1,4 +1,4 @@
-import URL from "../models/URL.js";
+import URL from "../models/url.js";
 import redisClient from "../config/redis.js";
 import { nanoid } from "nanoid";
 import dotenv from "dotenv";
@@ -27,7 +27,6 @@ export const createShortURL = async (req, res) => {
 
     const cachedUrl = await redisClient.get(alias);
 
-
     res.status(201).json({ shortUrl, createdAT: Date.now() });
   } catch (error) {
     res.status(500).json({ error: "Error creating short URL" });
@@ -55,13 +54,13 @@ export const redirectShortURL = async (req, res) => {
 
     // Parsing OS and Device data from user-agent
     const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    const agent = useragent.parse(req.headers['user-agent']);
-    const osType = agent.os.toString();   // Operating system
-    const deviceType = agent.device.toString()
-    
+    const agent = useragent.parse(req.headers["user-agent"]);
+    const osType = agent.os.toString(); // Operating system
+    const deviceType = agent.device.toString();
+
     const analyticsData = await redisClient.hset(`urlAnalytics:${alias}`, {
       agent,
-      ip,   
+      ip,
       osType,
       deviceType,
     });
@@ -72,7 +71,6 @@ export const redirectShortURL = async (req, res) => {
       osType = osType || agent.os.toString();
       deviceType = deviceType || agent.device.toString();
     }
-
 
     // Step 3: Update URL analytics in the database
     const url = await URL.findOne({ alias });
@@ -99,7 +97,9 @@ export const redirectShortURL = async (req, res) => {
       }
 
       // Handle deviceType analytics
-      const deviceEntry = url.deviceType.find((entry) => entry.deviceName === deviceType);
+      const deviceEntry = url.deviceType.find(
+        (entry) => entry.deviceName === deviceType
+      );
       if (deviceEntry) {
         deviceEntry.uniqueClicks += 1;
 
@@ -149,4 +149,3 @@ export const redirectShortURL = async (req, res) => {
     return res.status(500).json({ error: "Error redirecting to URL" });
   }
 };
-
